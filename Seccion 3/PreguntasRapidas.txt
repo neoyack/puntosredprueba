@@ -1,0 +1,20 @@
+
+Preguntas rápidas:
+
+- Windows o Linux?
+Linux.
+
+- MySQL o PostgreSQL?
+PostgreSQL
+
+- Batch processing o streaming?
+Streaming
+
+- ETL o ELT?
+ELT
+
+- Parquet o CSV?
+Parquet
+
+- Spark o Pandas?
+Spark 

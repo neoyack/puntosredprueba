@@ -1,0 +1,317 @@
+
+SECCION 1: PREGUNTAS TEORICAS
+
+PYTHON: 
+
+1. ¿Cuál es la diferencia entre una lista y un conjunto (set) en Python? 
+
+Ambas estructura de datos con las diferencias de la lista coleccion ordenada y mutable que permite elementos duplicados, se accede a sus elementos por indice. 
+Un conjunto(set) coleccion desordenada que almacena elementos unicos, no se puede acceder a los elementos por indice, si no se puede iterar sobre ellos.
+
+Ejemplo: 
+
+# 1. Lista mantiene duplicados y orden, Set elimina duplicados y desordena
+lista = [1, 2, 2, 3, 4]
+conjunto = {1, 2, 2, 3, 4}
+
+print(lista)    # Output: [1, 2, 2, 3, 4]
+print(conjunto) # Output: {1, 2, 3, 4}
+
+# 2. Acceso por índice en listas, no posible en conjuntos
+print(lista[1])  # Output: 2
+# print(conjunto[1])  # Error! No se puede acceder por índice
+
+# 3. Operaciones con conjuntos
+set_a = {1, 2, 3}
+set_b = {2, 3, 4}
+
+print(set_a | set_b)  # Unión: {1, 2, 3, 4}
+print(set_a & set_b)  # Intersección: {2, 3}
+print(set_a - set_b)  # Diferencia: {1}
+
+conjunto = {1, 2, 3, 4}
+
+# Iterar sobre el conjunto
+for elemento in conjunto:
+    print(elemento)
+
+# Output:
+# 1
+# 2
+# 3
+# 4
+
+2. ¿Qué es un generator en Python y en qué casos es útil? Proporcione un ejemplo de
+implementación.
+
+Funcion que produce secuencia de valores de forma perezosa, util para trabajar con grandes volumenes de datos, debido a que mejora 
+el rendimiento y reduce el consumo de memoria.
+
+def leer_archivo_en_chunks(ruta_archivo, tamaño_chunk=4096):
+    # Abre el archivo en modo binario para manejar datos sin procesar
+    with open(ruta_archivo, 'rb') as archivo:
+        # Bucle infinito para leer el archivo en porciones (chunks)
+        while True:
+            # Lee una porción del archivo de tamaño 'tamaño_chunk' (por defecto 4096 bytes)
+            chunk = archivo.read(tamaño_chunk)
+            # Si no se obtiene ningún dato, significa que se llegó al final del archivo y se sale del bucle
+            if not chunk:
+                break
+            # 'yield' devuelve el chunk actual sin cargar el archivo completo en memoria
+            # Esto permite manejar archivos muy grandes de forma eficiente
+            yield chunk
+
+# Uso del generator para procesar un archivo grande
+for porcion in leer_archivo_en_chunks('archivo_grande.txt', tamaño_chunk=4096):
+    # Procesa cada porción de datos individualmente.
+    # Aquí, como ejemplo, se imprime el tamaño de cada porción leída.
+    print(f"Procesando una porción de {len(porcion)} bytes")
+
+
+3. ¿Qué ventajas ofrece Pandas sobre las estructuras de datos nativas de Python para
+el análisis de datos?
+
+Eficiencia y velocidad: operaciones vectorizadas basadas en Numpy, ideal para grandes volumenes de datos de forma rapida y menor codigo.
+
+Estructuras de datos: Dataframe y series, que permite realizar filtrados, agrupaciones, transformaciones.
+
+Datos faltantes: Metodos integrados  para encontrar y gestionar datos ausentes como isnull(), dropna(), fillna(). Lo cual genera una ventaja 
+respecto a estructuras nativas ser mas complejo.
+
+Indexacion: Indexacion flexible y un alineamiento autoamticos de datos, que reduce errores y mejora consistencia al combinar diferentes conjuntos 
+de datos.
+
+Integracion y conectividad: Permite lectura y escritura en multiples formatos (CSV, Excel, SQL, JSON, etc) y intregra con otras librerias de analisis 
+y visualizacion, como Matblotlib y Seaborn. 
+
+4. ¿Cuál es la diferencia entre apply() y map() en Pandas? 
+
+map(): se usa solo en Series, mientras que apply() se usa en series y Dataframes.
+map(): aplica una funcion elemento por elemento, mientra que apply() puede aplicar funciones a cada elemento de una Series y/o cada fila/columna de un 
+dataframe.
+map(): Reemplaza valores o aplica transformaciones simples, mientra que apply() es mas flexible puede recibir funciones lambda, personalizadas o funciones
+a operar sobre multiples columnas.
+
+import pandas as pd
+
+# Datos de ejemplo
+df = pd.DataFrame({
+    'Producto': ['Laptop', 'Mouse', 'Teclado'],
+    'Precio': [1000, 50, 80]
+})
+
+# Usando map() en una sola columna (Serie)
+df['Precio con Descuento'] = df['Precio'].map(lambda x: x * 0.9)
+
+# Usando apply() en todo el DataFrame (operación fila por fila)
+df['Descripcion'] = df.apply(lambda row: f"{row['Producto']} cuesta ${row['Precio']}", axis=1)
+
+print(df)
+
+
+SQL:
+
+1. Dado un esquema de base de datos con las siguientes tablas
+empleados (id, nombre, departamento_id, salario,
+fecha_contratación)
+departamentos (id, nombre)
+Escriba una consulta para obtener el salario promedio de cada departamento,
+incluyendo el nombre del departamento. 
+  
+Solucion: 
+
+SELECT d.nombre AS nombre_departamento,
+       AVG(e.salario) AS salario_promedio
+FROM empleados e
+JOIN departamentos d ON e.departamento_id = d.id
+GROUP BY d.nombre;
+
+
+2. ¿Cuál es la diferencia entre INNER JOIN, LEFT JOIN y FULL JOIN?. Da un ejemplo
+de cada uno.
+
+INNER JOIN: Devuelve registros coincidentes en 2 tablas.
+LEFT JOIN: Devuelve todos los registros de la tabla izquierda y coincidencias de la derecha(o NULL donde no hay)
+FULL JOIN: Devuelve todas las filas de ambas tablas, de igual NULL donde no hay coincidencia. 
+
+Ejemplo INNER JOIN sobre transacciones bancarias donde recupera aquellas transacciones que tienen una cuenta asociada:
+
+SELECT t.id AS transaccion_id, t.monto, c.nombre_cliente
+FROM transacciones t
+INNER JOIN cuentas c ON t.cuenta_id = c.id;
+
+Ejemplo LEFT JOIN sobre transacciones bancarias muestra todas las cuentas, incluyendo aquellas  que aun no tienen transacciones
+registradas:
+
+SELECT c.id AS cuenta_id, c.nombre_cliente, t.id AS transaccion_id, t.monto
+FROM cuentas c
+LEFT JOIN transacciones t ON c.id = t.cuenta_id;
+
+Ejemplo FULL JOIN sobre transacciones bancarias lista todas las cuentas y todas las transacciones sin cuenta asociada:
+
+SELECT c.id AS cuenta_id, c.nombre_cliente, t.id AS transaccion_id, t.monto
+FROM cuentas c
+FULL JOIN transacciones t ON c.id = t.cuenta_id;
+
+
+3. ¿Cómo optimizarías una consulta en una base de datos con millones de registros?
+
+- Si la tabla esta particionada, incluyo en la consulta condiciones que solo las particiones requeridas, evitando escanear toda la tabla,
+normalmente las particiones son fechas.
+
+- Confirmar q las columnas usadas en filtros y/o joins tengan indices apropiados.
+
+- Limitar  la consulta de columnas necesarias y aplicar condiciones de filtrado en subconsultas, para disminuir el volumen de datos procesados.
+
+4. ¿Qué es la cláusula HAVING en SQL y en qué se diferencia de WHERE?
+
+HAVING filtra resultados despues que se han aplicado funciones de agregacion junto con GROUP BY, mientras que WHERE filtra resultados antes de 
+realizar  la agrupacion. En resumen WHERE limita datos de entrada y HAVING refina  los resultados agrupados.
+
+Amazon Web Services
+
+1. ¿Cuál es la diferencia entre Amazon S3, Amazon RDS y Amazon Redshift?
+
+Amazon S3: Almacenamiento de objetos, guarda grandes volumenes de datos, tantos estructurados como no estructurados (Data Lake).
+
+Amazon RDS: Servicio de base de datos gestionado relacional, optimizado para para operaciones transacionales.
+
+Amazon Redshift: Servicio para analisis de grandes cantidades de datos y consultas analiticas, Data Warehouse.
+
+2. ¿Cuándo usarías Amazon DynamoDB en lugar de Amazon RDS o Amazon
+Redshift?
+
+ Amazon DynamoDB lo usaria para modelos NoSQL, donde se presentan flexibilidad de esquemas, asi como datos semiestructurados o sin estructura. 
+Tambien cuando requiera aplicaciones en tiempo real  con alto volumen de datos lectura y escritura, donde se requiere baja lactencia ejemplo 
+aplicaciones moviles o web.
+
+3. ¿Cuáles son las diferencias entre AWS Lambda y AWS EC2 para ejecutar cargas de
+trabajo?
+
+AWS Lambda: Sin administracion de servidores, la carga se ajusta automaticamente. Se paga solo por tiempo de ejecucion, con restriccion de tiempo de 
+duracion y recursos.
+
+AWS EC2: Maquinas virtuales configuraciones personalizadas y control completo. Ideal para cargas de trabajo prolongadas con ello procesos 
+de ETL intensivos o de larga duracion. Para la administracion de infraestructura se requiere gestion manual o semiautomatica.
+
+4. ¿Cómo implementarías un mecanismo seguro para que un servicio en AWS acceda
+a un bucket de S3 sin usar claves de acceso en el código?
+
+Implemnetaria roles de IAM definiendo politicas especificas para S3, asignando un rol de servicio, que requiera o necesite acceder al bucket,
+generando credenciales temporales y seguras gestionadas por AWS.
+
+
+Sección 2: Prueba práctica SQL
+
+Tienes las siguientes tablas en una base de datos:
+clientes
+id (INT, PRIMARY KEY)
+nombre (VARCHAR)
+apellido (VARCHAR)
+ventas
+id (INT, PRIMARY KEY)
+cliente_id (INT, FOREIGN KEY a clientes.id)
+producto (VARCHAR)
+fecha (DATE)
+monto (DECIMAL)
+Escribe una consulta para obtener los 5 clientes con mayor monto total de ventas en los
+últimos 6 meses.
+
+SELECT 
+    c.id,
+    CONCAT(c.nombre, ' ', c.apellido) AS nombre_completo,
+    SUM(v.monto) AS total_ventas
+FROM clientes c
+JOIN ventas v ON c.id = v.cliente_id
+WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH)  -- Filtra las ventas realizadas en los últimos 6 meses
+GROUP BY c.id, c.nombre, c.apellido                  -- Agrupa por cada cliente para sumar sus ventas
+ORDER BY total_ventas DESC                           
+LIMIT 5;                                             
+
+
+Escribe una consulta para calcular el ticket promedio de ventas por cliente en el último año.
+
+
+SELECT 
+    c.id,
+    CONCAT(c.nombre, ' ', c.apellido) AS nombre_completo, 
+    AVG(v.monto) AS ticket_promedio                      
+FROM clientes c
+JOIN ventas v ON c.id = v.cliente_id
+WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)   -- Filtra las ventas realizadas en el último año
+GROUP BY c.id, c.nombre, c.apellido                     -- Agrupa los registros por cliente para calcular el promedio individual
+ORDER BY ticket_promedio DESC;                          
+
+Escribe una consulta para obtener el nombre completo de los clientes y su monto total de
+ventas.
+
+
+SELECT 
+    CONCAT(c.nombre, ' ', c.apellido) AS nombre_completo,  -- Combina nombre y apellido para formar el nombre completo del cliente
+    COALESCE(SUM(v.monto), 0) AS total_ventas              -- Suma el monto de las ventas; si no hay ventas, retorna 0 en lugar de NULL
+FROM clientes c
+LEFT JOIN ventas v ON c.id = v.cliente_id                -- Se utiliza LEFT JOIN para incluir a todos los clientes, incluso si no tienen ventas
+GROUP BY c.id, c.nombre, c.apellido;                     -- Agrupa por cliente para calcular el total de ventas de cada uno
+
+
+Escribe una consulta para obtener el ingreso promedio de ventas por mes.
+
+SELECT 
+    AVG(mes_total) AS ingreso_promedio_mensual  -- Calcula el promedio de los totales mensuales
+FROM (
+    -- Subconsulta: Agrupa las ventas por mes y suma el monto total de cada mes
+    SELECT 
+        DATE_FORMAT(fecha, '%Y-%m') AS mes,      -- Formatea la fecha para agrupar por año y mes
+        SUM(monto) AS mes_total                 
+    FROM ventas
+    GROUP BY mes
+	) AS ventas_mensuales;
+
+Escribe una consulta para calcular el ranking de clientes por ventas en el último año.
+
+
+SELECT 
+    id,
+    nombre_completo,
+    total_ventas,
+    RANK() OVER (ORDER BY total_ventas DESC) AS ranking  -- Asigna un ranking basado en el total de ventas en orden descendente
+FROM (
+    -- Subconsulta: Suma el total de ventas de cada cliente en el último año
+    SELECT 
+        c.id,
+        CONCAT(c.nombre, ' ', c.apellido) AS nombre_completo,
+        SUM(v.monto) AS total_ventas
+    FROM clientes c
+    JOIN ventas v ON c.id = v.cliente_id
+    WHERE v.fecha >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)  -- Filtra las ventas del último año
+    GROUP BY c.id, c.nombre, c.apellido
+			) AS ventas_por_cliente
+	ORDER BY ranking;
+
+
+Escribe una consulta para calcular el total de ventas por cliente y luego selecciona solo los
+clientes cuyo total de ventas es superior al promedio general.
+
+WITH VentasPorCliente AS (
+    -- Calcula el total de ventas por cada cliente
+    SELECT 
+        cliente_id, 
+        SUM(monto) AS total_ventas
+    FROM ventas
+    GROUP BY cliente_id
+),
+PromedioVentas AS (
+    -- Calcula el promedio general de ventas entre todos los clientes
+    SELECT AVG(total_ventas) AS promedio_general
+    FROM VentasPorCliente
+)
+SELECT 
+    c.id,
+    CONCAT(c.nombre, ' ', c.apellido) AS nombre_completo,
+    v.total_ventas
+FROM VentasPorCliente v
+JOIN clientes c ON v.cliente_id = c.id
+CROSS JOIN PromedioVentas p
+-- Filtra solo los clientes con total de ventas superior al promedio general
+WHERE v.total_ventas > p.promedio_general;
+
