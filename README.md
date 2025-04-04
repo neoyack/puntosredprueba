@@ -5,3 +5,13 @@ Este repositorio contiene la solución completa a la **Prueba Técnica para el c
 ---
 
 ## 📁 Estructura del repositorio
+```bash
+puntosredprueba/
+├── Seccion 1&2/
+│   ├── # Archivos o subcarpetas relacionados con la sección 1 y 2
+│   └── ...
+├── Seccion 3/
+│   ├── # Archivos o subcarpetas relacionados con la sección 3
+│   └── ...
+└── README.md
+
