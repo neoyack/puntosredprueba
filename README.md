@@ -15,3 +15,7 @@ puntosredprueba/
 │   └── ...
 └── README.md
 
+Contacto
+Autor: Yamid Paez Perez
+Correo: yamidp@gmail.com
+LinkedIn: [linkedin.com/in/TuPerfil](https://www.linkedin.com/in/efrainyamidpaezperez/)
