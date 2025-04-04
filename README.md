@@ -18,4 +18,4 @@ puntosredprueba/
 Contacto
 Autor: Yamid Paez Perez
 Correo: yamidp@gmail.com
-LinkedIn: [linkedin.com/in/TuPerfil](https://www.linkedin.com/in/efrainyamidpaezperez/)
+LinkedIn: https://www.linkedin.com/in/efrainyamidpaezperez
